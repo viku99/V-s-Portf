@@ -4,7 +4,7 @@
 // which powers the in-page, real-time content editing functionality.
 
 import React from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import Header from './components/Header';
@@ -54,7 +54,7 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
 // --- Main App Wrapper ---
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <EditorProvider>
         <ScrollToTop />
         <div className="min-h-screen bg-black text-white antialiased">
@@ -66,7 +66,7 @@ function App() {
           </main>
         </div>
       </EditorProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
