@@ -1,9 +1,9 @@
 
+
 // 🏠 Home Page
 // This is the main landing page of the portfolio.
 // It features a full-screen, cinematic hero section designed to make a strong first impression.
 
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import AnimatedPage from '../components/AnimatedPage';

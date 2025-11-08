@@ -3,7 +3,6 @@
 // It renders as a fixed vertical bar on the left (on desktop) or a top bar (on mobile),
 // ensuring it's always accessible.
 
-import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 

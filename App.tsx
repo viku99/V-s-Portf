@@ -16,9 +16,6 @@ import ContactPage from './pages/ContactPage';
 import ScrollToTop from './components/ScrollToTop';
 
 import { EditorProvider, useEditor } from './components/EditorProvider';
-import EditorToolbar from './components/EditorToolbar';
-import LoginModal from './components/LoginModal';
-import MediaUploadModal from './components/MediaUploadModal';
 
 // --- Error Boundary (remains unchanged) ---
 // ... (previous ErrorBoundary code is correct and can be kept)
@@ -67,9 +64,6 @@ function App() {
               <AppRoutes />
             </ErrorBoundary>
           </main>
-          <EditorToolbar />
-          <LoginModal />
-          <MediaUploadModal />
         </div>
       </EditorProvider>
     </HashRouter>

@@ -1,12 +1,11 @@
 // 📄 Project Detail Page
 // This page showcases a single project in detail, now with full inline editing capabilities.
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import AnimatedPage from '../components/AnimatedPage';
 import { useEditor } from '../components/EditorProvider';
-import Editable from '../components/Editable';
 
 // --- Helper to convert YouTube watch URL to embed URL ---
 const getYouTubeEmbedUrl = (url: string) => {
@@ -78,40 +77,30 @@ function ProjectDetailPage() {
     const { slug } = useParams<{ slug: string }>();
     const { siteContent } = useEditor();
     
-    const projectIndex = siteContent?.projects.findIndex(p => p.id === slug);
-    const project = projectIndex !== -1 ? siteContent?.projects[projectIndex!] : undefined;
+    const project = siteContent?.projects.find(p => p.id === slug);
 
     if (!project) {
         return <Navigate to="/portfolio" replace />;
     }
 
     const hasMedia = project.video || project.images.length > 0;
-    const basePath = `projects[${projectIndex}]`;
 
     const MainMedia = () => {
         if (project.video) {
-            return (
-                <Editable path={`${basePath}.video`} type="media">
-                    <VideoPlayer src={project.video} />
-                </Editable>
-            );
+            return <VideoPlayer src={project.video} />;
         }
         if (project.thumbnail) {
             return (
-                <Editable path={`${basePath}.thumbnail`} type="media">
-                     <div className="relative aspect-video bg-neutral-900 rounded-lg overflow-hidden">
-                        <img src={project.thumbnail} alt={project.title} className="w-full h-full object-cover" />
-                     </div>
-                </Editable>
+                 <div className="relative aspect-video bg-neutral-900 rounded-lg overflow-hidden">
+                    <img src={project.thumbnail} alt={project.title} className="w-full h-full object-cover" />
+                 </div>
             );
         }
         // Fallback for when there's no video or thumbnail
         return (
-             <Editable path={`${basePath}.thumbnail`} type="media">
-                 <div className="relative aspect-video bg-neutral-900 rounded-lg overflow-hidden flex items-center justify-center">
-                    <p className="text-neutral-500">No media found. Add a thumbnail or video URL in Edit Mode.</p>
-                 </div>
-            </Editable>
+             <div className="relative aspect-video bg-neutral-900 rounded-lg overflow-hidden flex items-center justify-center">
+                <p className="text-neutral-500">No media found for this project.</p>
+             </div>
         );
     };
 
@@ -126,9 +115,9 @@ function ProjectDetailPage() {
                     </motion.div>
 
                     <motion.header initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }} className="mb-8 text-center">
-                        <Editable as="h1" path={`${basePath}.title`} className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-2" />
+                        <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-2">{project.title}</h1>
                         <p className="text-lg text-neutral-400">
-                            <Editable path={`${basePath}.category`} as="span" /> &bull; <Editable path={`${basePath}.year`} as="span" />
+                            <span>{project.category}</span> &bull; <span>{project.year}</span>
                         </p>
                     </motion.header>
 
@@ -139,20 +128,15 @@ function ProjectDetailPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
                         <motion.div className="lg:col-span-1" initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7, delay: 0.4 }}>
                             <h2 className="text-2xl font-bold uppercase tracking-wider mb-4">About the Project</h2>
-                            <Editable path={`${basePath}.description`} as="p" className="text-neutral-300 leading-relaxed mb-8" multiline />
+                            <p className="text-neutral-300 leading-relaxed mb-8">{project.description}</p>
                             
                             <h3 className="text-xl font-bold uppercase tracking-wider mb-4">Tools Used</h3>
                             <div className="flex flex-wrap gap-2">
-                                <Editable
-                                    path={`${basePath}.tools`}
-                                    multiline
-                                    label="Tools (comma separated)"
-                                    render={(tools: string[]) => tools.map(tool => (
-                                        <span key={tool} className="bg-neutral-800 text-neutral-300 px-3 py-1 text-sm font-medium rounded-full">
-                                            {tool}
-                                        </span>
-                                    ))}
-                                />
+                                {project.tools.map(tool => (
+                                    <span key={tool} className="bg-neutral-800 text-neutral-300 px-3 py-1 text-sm font-medium rounded-full">
+                                        {tool}
+                                    </span>
+                                ))}
                             </div>
                         </motion.div>
 
@@ -161,15 +145,9 @@ function ProjectDetailPage() {
                                 <h2 className="text-2xl font-bold uppercase tracking-wider mb-4">Gallery</h2>
                                 <div className="grid grid-cols-2 gap-4">
                                     {project.images.map((image, index) => (
-                                        <Editable
-                                            key={image + index}
-                                            path={`${basePath}.images[${index}]`}
-                                            type="media"
-                                        >
-                                            <motion.div className="group relative aspect-video overflow-hidden rounded-lg" whileHover={{ scale: 1.03 }} transition={{ type: 'spring', stiffness: 300 }}>
-                                                <img src={image} alt={`Project image ${index + 1}`} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
-                                            </motion.div>
-                                        </Editable>
+                                        <motion.div key={image + index} className="group relative aspect-video overflow-hidden rounded-lg" whileHover={{ scale: 1.03 }} transition={{ type: 'spring', stiffness: 300 }}>
+                                            <img src={image} alt={`Project image ${index + 1}`} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                                        </motion.div>
                                     ))}
                                 </div>
                             </motion.div>
